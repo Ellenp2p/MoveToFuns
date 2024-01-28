@@ -1,0 +1,49 @@
+---
+import { getCollection } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Sidebar from "@/components/Sidebar.astro";
+import Toc from "@/components/Toc.astro";
+
+export async function getStaticPaths() {
+  const blogEntries = await getCollection("move");
+  return blogEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const sub = entry.slug.match(/^(.+?)\//);
+const blogEntries = (await getCollection("move"))
+  .filter((item) => item.slug.startsWith(sub?.[0].toString() ?? ""))
+  .sort((a, b) => a.data["index"] - b.data["index"]);
+
+const { Content, headings } = await entry.render();
+---
+
+<BaseLayout
+  title={`Move Startrek | ${sub?.[0].replace("/", "").toUpperCase()} - ${
+    entry.data["title"]
+  }`}
+>
+  <div class="grow flex w-full h-full min-h-full">
+    <Sidebar
+      entrys={blogEntries.map((item) => {
+        return { title: item.data["title"], slug: item.slug };
+      })}
+    />
+
+    <div class="flex flex-row w-full">
+      <div
+        class="grow-[2] bg-white min-w-48 dark:bg-slate-900 text-black prose max-w-none pl-10 pr-4 py-12"
+      >
+        <Content />
+      </div>
+      <div
+        class="pt-24 z-0 sticky top-0 -mt-24 min-w-56 h-screen bg-white hidden lg:block dark:bg-slate-900"
+      >
+        <Toc headings={headings} />
+      </div>
+    </div>
+  </div>
+</BaseLayout>

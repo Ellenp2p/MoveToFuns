@@ -1,0 +1,53 @@
+---
+type EntryMetadata = {
+  title: string;
+  slug: string;
+};
+type Props = {
+  entrys: EntryMetadata[];
+};
+
+const { entrys } = Astro.props;
+---
+
+<aside
+  id="logo-sidebar"
+  class="rounded-t-lg z-0 sticky top-0 -mt-20 w-64 h-screen pt-24 transition-transform -translate-x-full hidden bg-white border-r border-gray-200 lg:translate-x-0 lg:block dark:bg-gray-800 dark:border-gray-700"
+  aria-label="Sidebar"
+>
+  <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+    <ul class="space-y-2 font-medium">
+      {
+        entrys.map(({ title, slug }) => {
+          return (
+            <li>
+              <a
+                href={`/${slug}`}
+                class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+              >
+                <span class="ms-3">{title}</span>
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+  </div>
+</aside>
+
+<!-- <aside id="sidebar-multi-level-sidebar" class="h-full w-80 hidden lg:block rounded-t-lg sticky top-0 -mt-16" aria-label="Sidebar">
+   <div class="rounded-t-lg  px-3 py-4 pt-20 bg-gray-50 dark:bg-slate-900  ">
+      <ul class="space-y-2 font-medium">
+         { 
+            entrys.map(({title, slug})=>{
+               return <li>
+                  <a href={`/${slug}`} class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                     {title}
+                  </a>
+               </li>
+               
+            })
+         } 
+      </ul>
+   </div>
+</aside> -->
