@@ -1,43 +1,28 @@
 ---
-import BaseHead from '@/components/BaseHead.astro';
-import Footer from '@/components/Footer.astro';
-import Header from '@/components/Header.astro';
-import 'flowbite';
+import BaseHead from "@/components/BaseHead.astro";
+import Footer from "@/components/Footer.astro";
+import Header from "@/components/Header.astro";
+import "flowbite";
 const { title } = Astro.props;
-
 ---
-<html lang="en">
-	<head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-		<BaseHead title={title}/>
-		<script>
-			import { Modal } from 'flowbite'
-		  
-			// select the two elements that we'll work with
-			const $buttonElement: HTMLElement | null = document.querySelector('#button');
-			const $modalElement: HTMLElement | null = document.querySelector('#defaultModal');
-		  
-			// create a new modal component
-			const modal = new Modal($modalElement);
-		  
-			// toggle the visibility of the modal when clicking on the button
-			if ($buttonElement) {
-			  $buttonElement.addEventListener('click', () => modal.toggle());
-			}
-		  </script>
-	</head>
-	<body class=" bg-gray-300">
-		<div class="flex flex-col  max-w-7xl min-w-80 w-full mx-auto min-h-svh divide-y">
-			<slot name="Header">
-				<Header />
-			</slot>
-				<slot />
-			<slot name="Footer" >
-				<Footer />
-			</slot>
-		</div>
-	</body>
 
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <BaseHead title={title} />
+  </head>
+  <body class="bg-gray-300">
+    <div
+      class="flex flex-col max-w-7xl min-w-80 w-full mx-auto min-h-svh divide-y"
+    >
+      <slot name="Header">
+        <Header />
+      </slot>
+      <slot />
+      <slot name="Footer">
+        <Footer />
+      </slot>
+    </div>
+  </body>
 </html>
- 

@@ -12,10 +12,12 @@ const { entrys } = Astro.props;
 
 <aside
   id="logo-sidebar"
-  class="rounded-t-lg z-0 sticky top-0 -mt-20 w-64 h-screen pt-24 transition-transform -translate-x-full hidden bg-white border-r border-gray-200 lg:translate-x-0 lg:block dark:bg-gray-800 dark:border-gray-700"
+  class="rounded-t-lg z-0 sticky top-0 -mt-20 w-64 h-screen pt-24 transition-transform -translate-x-full hidden bg-white lg:translate-x-0 lg:block dark:bg-gray-800 dark:border-gray-700"
   aria-label="Sidebar"
 >
-  <div class="h-full px-3 pb-4 overflow-y-auto bg-white dark:bg-gray-800">
+  <div
+    class="h-full px-3 pb-4 overflow-y-auto border-r border-gray-200 bg-white dark:bg-gray-800"
+  >
     <ul class="space-y-2 font-medium">
       {
         entrys.map(({ title, slug }) => {
