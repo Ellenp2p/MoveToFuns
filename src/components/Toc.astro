@@ -7,14 +7,32 @@ type Props = {
 const { headings } = Astro.props;
 ---
 
+<script is:inline>
+  function scrollToSection(sectionId) {
+    let yOffset = -100;
+
+    let element = document.getElementById(sectionId);
+
+    if (element) {
+      let y =
+        element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: "smooth" });
+      event.preventDefault();
+    }
+  }
+</script>
 <div
   class="flex flex-col gap-2 w-full border-solid border-l-2 py-6 px-4 text-sm"
 >
   {
-    headings.map((item) => (
-      <div class={`ml-${(item.depth - 1) * 2} ${item.depth > 1 ? "pl-2" : ""}`}>
-        <a href={`#${item.slug}`} class=" text-gray-600 hover:underline">
-          {item.text}
+    headings.map(({ depth, slug, text }) => (
+      <div class={`ml-${(depth - 1) * 2} ${depth > 1 ? "pl-2" : ""}`}>
+        <a
+          href={`#${slug}`}
+          onclick={`scrollToSection("${decodeURI(encodeURI(slug))}")`}
+          class=" text-gray-600 hover:underline"
+        >
+          {text}
         </a>
       </div>
     ))
