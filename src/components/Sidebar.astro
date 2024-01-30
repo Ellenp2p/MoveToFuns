@@ -15,24 +15,26 @@ const { entrys } = Astro.props;
   class="rounded-t-lg z-0 min-w-48 w-64 transition-transform -translate-x-full hidden bg-white lg:translate-x-0 lg:flex lg:flex-col dark:bg-gray-800 dark:border-gray-700"
   aria-label="Sidebar"
 >
-  <div
-    class="sticky top-0 px-3 pb-4 pt-24 overflow-y-auto border-r border-gray-200 bg-white dark:bg-gray-800"
-  >
-    <ul class="space-y-2 font-medium">
-      {
-        entrys.map(({ title, slug }) => {
-          return (
-            <li>
-              <a
-                href={`/${slug}`}
-                class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-              >
-                <span class="ms-3">{title}</span>
-              </a>
-            </li>
-          );
-        })
-      }
-    </ul>
+  <div class="sticky top-0 pt-24">
+    <div
+      class="px-3 pb-4 overflow-y-auto border-r border-gray-200 bg-white dark:bg-gray-800"
+    >
+      <ul class="space-y-2 font-medium">
+        {
+          entrys.map(({ title, slug }) => {
+            return (
+              <li>
+                <a
+                  href={`/${slug}`}
+                  class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                >
+                  <span class="ms-3">{title}</span>
+                </a>
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
   </div>
 </aside>
