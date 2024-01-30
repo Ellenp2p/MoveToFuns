@@ -22,7 +22,9 @@ const { headings } = Astro.props;
   }
 </script>
 <div class="flex py-6 w-full h-full">
-  <div class="flex flex-col h-fit px-4 gap-2 border-solid border-l-2 text-sm">
+  <div
+    class="flex flex-col sticky top-0 pt-28 h-fit px-4 gap-2 border-solid border-l-2 text-sm"
+  >
     {
       headings.map(({ depth, slug, text }) => (
         <div class={`ml-${(depth - 1) * 2} ${depth > 1 ? "pl-2" : ""}`}>
