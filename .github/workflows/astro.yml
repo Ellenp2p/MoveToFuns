@@ -62,6 +62,10 @@ jobs:
         with:
           node-version: "20"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
+      - name: Setup Pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v4
