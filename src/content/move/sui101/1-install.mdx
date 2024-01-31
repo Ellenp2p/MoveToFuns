@@ -1,0 +1,174 @@
+---
+title: '1. Install Sui'
+pubDate: 2024-02-1
+author: 'Ellen | 不霁何虹'
+tags: []
+index: 2
+---
+# Install 安装
+
+## Sui Move 环境安装
+
+### 安装方式
+
+可使用两种方式进行安装
+- 安装二进制、设置环境变量
+- 安装 rust、cmake 等环境后，源码安装
+
+两种方式都可以安装 Sui 二进制，但是二进制安装更方便，推荐使用。
+
+但不能保证各种环境下的二进制安装都能正常工作，如果出现问题可以尝试源码安装。
+
+### 二进制安装
+
+如果选择二进制安装，需要先确定操作系统版本
+
+默认的二进制支持以下系统
+
+- **Ubuntu 22.04 / 20.04**
+- **Windows 10 / 11**
+- **Mac OS arm64 / x86_64**
+
+#### 下载二进制压缩包
+**可以自行在 [Sui GitHub](https://github.com/MystenLabs/sui/releases/latest) 的 release 中下载合适自己系统的二进制压缩包**
+
+>如下案例中 sui-mainnet-v1.17.3-macos-arm64.tgz v1.17.3 为写作时最新版本，读者下载时请看清最新的版本号
+- **Mac OS arm64**: sui-mainnet-v1.17.3-macos-arm64.tgz
+- **Mac OS x86_64**: sui-mainnet-v1.17.3-macos-x86_64.tgz
+- **Ubuntu x86_64**: sui-mainnet-v1.17.3-ubuntu-x86_64.tgz
+- **Windows x86_64**: sui-mainnet-v1.17.3-windows-x86_64.tgz
+
+#### 解压
+当下载安装包后，不同系统的解压方式不同
+1. Windows 10 / 11
+
+可选择使用 [7-zip](https://www.7-zip.org/) 解压工具解压
+
+由于是 tgz 文件，需要注意可能要解压两次
+
+最终获得如下目录结构
+```
+sui-mainnet-v1.17.3-windows-x86_64
+    +---external-crates
+    |   \---move
+    |       \---target
+    |           \---release
+    |                   move-analyzer-windows-x86_64.exe
+    |
+    \---target
+        \---release
+                sui-data-ingestion-windows-x86_64.exe
+                sui-faucet-windows-x86_64.exe
+                sui-indexer-windows-x86_64.exe
+                sui-node-windows-x86_64.exe
+                sui-test-validator-windows-x86_64.exe
+                sui-tool-windows-x86_64.exe
+                sui-windows-x86_64.exe
+```
+随后将 release 目录下的 每个文件后面的 `-windows-x86_64` 删除
+
+例如:
+```
+sui-windows-x86_64.exe -> sui.exe
+```
+
+可以手动修改也可以执行 powershell 脚本（请在 release 目录执行脚本）
+```
+$currentDirectory = Get-Location; $files = Get-ChildItem $currentDirectory; foreach ($file in $files) { $newFileName = $file.Name -replace "-windows-x86_64", ""; $newFilePath = Join-Path $currentDirectory $newFileName; Rename-Item -Path $file.FullName -NewName $newFilePath -Force }
+```
+
+2. Mac OS arm64 / x86_64
+
+暂无，待补充
+
+3. Ubuntu 22.04 / 20.04
+
+暂无，待补充
+
+#### 设置环境变量
+
+当解压完成并修改文件名后，将文件移动到安全可以找到的地方。
+
+并记录下这个目录的绝对目录
+
+1. Windows
+
+例如：
+> 我放在了 家目录的 bin 目录中，这个绝对目录就是 `C:\Users\bujihh\bin` 
+```
+PS C:\Users\bujihh\bin> pwd
+
+Path
+----
+C:\Users\bujihh\bin
+
+PS C:\Users\bujihh\bin> tree /F /A
+文件夹 PATH 列表
+卷序列号为 42E5-1C51
+C:.
+    sui-data-ingestion.exe
+    sui-faucet.exe
+    sui-indexer.exe
+    sui-node.exe
+    sui-test-validator.exe
+    sui-tool.exe
+    sui.exe
+```
+
+两种方式设置环境变量:
+
+- 用 powershell 脚本
+
+> 注意：需要修改下方脚本中的 `C:\Users\bujihh\bin` 为你的路径 
+```
+$directoryToAdd = "C:\Users\bujihh\bin";$userPath = [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::User); if ($userPath -notlike "*$directoryToAdd*") { $newPath = "$userPath;$directoryToAdd"; [System.Environment]::SetEnvironmentVariable('Path', $newPath, [System.EnvironmentVariableTarget]::User); Write-Host "Directory added to PATH: $directoryToAdd" } else { Write-Host "Directory already in PATH: $directoryToAdd" }
+```
+- 使用窗口设置
+
+执行 powershell 以打开环境变量设置窗口
+```
+control.exe sysdm.cpl,System,3
+```
+点击 `环境变量(N)` 按钮,在下方系统变量中找到 `Path` 变量，点击 `编辑`。
+
+在下方添加 sui.exe 放置的绝对目录 如：`C:\Users\bujihh\bin`。
+
+随后点击 `确定` 并关闭窗口。
+
+#### 测试
+
+1. windows
+
+关闭 PowerShell 并打开新的 PowerShell 窗口，输入 `sui` 并回车。
+
+如果出现如下图所示的界面，说明安装成功。
+```
+PS C:\Users\bujihh\Desktop> sui
+A Byzantine fault tolerant chain with low-latency finality and high throughput
+
+Usage: sui.exe <COMMAND>
+
+Commands:
+  start             Start sui network
+  network
+  genesis           Bootstrap and initialize a new sui network
+  genesis-ceremony
+  keytool           Sui keystore tool
+  console           Start Sui interactive console
+  client            Client for interacting with the Sui network
+  validator         A tool for validators and validator candidates
+  move              Tool to build and test Move applications
+  fire-drill        Tool for Fire Drill
+  help              Print this message or the help of the given subcommand(s)
+
+Options:
+  -h, --help     Print help
+  -V, --version  Print version
+```
+2. Mac OS
+
+暂无，待补充
+
+3. Ubuntu
+
+暂无，待补充

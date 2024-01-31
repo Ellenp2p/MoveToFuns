@@ -32,14 +32,14 @@ const { Content, headings } = await entry.render();
         return { title: item.data["title"], slug: item.slug };
       })}
     />
-    <div class="flex flex-row w-full mt-16">
+    <div class="flex flex-row w-full mt-16 lg:w-10/12">
       <div
-        class="grow-[2] bg-white min-w-48 dark:bg-slate-900 text-black prose max-w-none pl-10 pr-4 py-12"
+        class="grow-[2] bg-white w-5/6 dark:bg-slate-900 text-black prose max-w-none pl-10 pr-4 py-12"
       >
         <Content />
       </div>
       <div
-        class="grow z-0 min-w-56 -mt-24 bg-white hidden lg:block dark:bg-slate-900"
+        class="grow z-0 -mt-24 w-1/6 bg-white hidden lg:block dark:bg-slate-900"
       >
         <Toc headings={headings} />
       </div>
