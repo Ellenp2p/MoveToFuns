@@ -1,5 +1,5 @@
 ---
-import { Moon, Sun } from "lucide-solid";
+import { DarkModeToggle } from './solid/DarkModeToggle';
 const items = ["Home", "About"];
 ---
 
@@ -137,13 +137,9 @@ const items = ["Home", "About"];
         }
 
         <li>
-          <div
-            class="py-2 px-3 select-none cursor-pointer"
-            onclick="toggleNightMode()"
-          >
-            <Sun id="Sun" color="#ffffff" class="hidden" />
-            <Moon id="Moon" color={"#000000"} />
-          </div>
+            <DarkModeToggle client:only="solid-js">
+             
+            </DarkModeToggle>
         </li>
       </ul>
     </div>
