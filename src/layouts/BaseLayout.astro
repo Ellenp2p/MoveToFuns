@@ -2,7 +2,6 @@
 import BaseHead from "@/components/BaseHead.astro";
 import Footer from "@/components/Footer.astro";
 import Header from "@/components/Header.astro";
-import "flowbite";
 const { title } = Astro.props;
 ---
 
@@ -12,7 +11,46 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <BaseHead title={title} />
   </head>
-  <body class="bg-gray-300">
+  <body >
+    <div class="bg-pale-silver dark:bg-black h-full w-full">
+    <script is:inline>
+      const getThemePreference = () => {
+          if (
+            typeof localStorage !== "undefined" &&
+            localStorage.getItem("theme")
+          ) {
+            return localStorage.getItem("theme");
+          }
+          return window.matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light";
+      };
+      const isDark = getThemePreference() === "dark";
+      document.body.classList[isDark ? "add" : "remove"]("dark");
+
+      document.addEventListener("astro:page-load", () => {
+        if (typeof localStorage !== "undefined") {
+          const observer = new MutationObserver(() => {
+            const isDark = document.body.classList.contains("dark");
+            localStorage.setItem("theme", isDark ? "dark" : "light");
+          });
+          observer.observe(document.body, {
+            attributes: true,
+            attributeFilter: ["class"],
+          });
+        }
+      });
+
+      document.addEventListener("astro:after-swap", () => {
+      let isDark = localStorage.theme === "dark";
+      document.body.classList[isDark ? "add" : "remove"]("dark");
+      });
+        // import { $currentThemeStore } from "@/store/DarkMode";
+        // $currentThemeStore.subscribe((currentTheme ) =>{ 
+        //   const isDark = currentTheme == 'dark';
+        //   document.body.classList[isDark ? "add" : "remove"]("dark");
+        // });
+    </script>
     <div
       class="flex flex-col mx-auto w-full min-w-80 max-w-screen-2xl min-h-svh"
     >
@@ -24,5 +62,6 @@ const { title } = Astro.props;
         <Footer />
       </slot>
     </div>
+  </div>
   </body>
 </html>

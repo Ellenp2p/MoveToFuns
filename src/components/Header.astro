@@ -1,53 +1,10 @@
 ---
-import { DarkModeToggle } from './solid/DarkModeToggle';
 const items = ["Home", "About"];
 ---
-
-<script>
-  document.addEventListener("astro:page-load", () => {
-    const getThemePreference = () => {
-      if (
-        typeof localStorage !== "undefined" &&
-        localStorage.getItem("theme")
-      ) {
-        return localStorage.getItem("theme");
-      }
-      return window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-    };
-    const isDark = getThemePreference() === "dark";
-    document.body.classList[isDark ? "add" : "remove"]("dark");
-
-    if (typeof localStorage !== "undefined") {
-      const observer = new MutationObserver(() => {
-        const isDark = document.body.classList.contains("dark");
-        localStorage.setItem("theme", isDark ? "dark" : "light");
-      });
-      observer.observe(document.body, {
-        attributes: true,
-        attributeFilter: ["class"],
-      });
-    }
-  });
-
-  document.addEventListener("astro:after-swap", () => {
-    let isDark = localStorage.theme === "dark";
-    document.body.classList[isDark ? "add" : "remove"]("dark");
-  });
-</script>
 <script is:inline>
-  function toggleNightMode() {
-    return;
-    const body = document.body;
 
-    body.classList.toggle("dark");
-
-    let sun = document.querySelector("#Sun");
-    if (sun) sun.classList.toggle("hidden");
-
-    let moon = document.querySelector("#Moon");
-    if (moon) moon.classList.toggle("hidden");
+  function toggleDark() {
+    document.body.classList.toggle("dark");
   }
 
   function toggleSide() {
@@ -66,8 +23,9 @@ const items = ["Home", "About"];
   }
 </script>
 
+
 <nav
-  class="fixed top-0 w-full bg-white max-w-screen-2xl border-gray-200 dark:bg-gray-900 z-40"
+  class="fixed top-0 w-full bg-white max-w-screen-2xl border-gray-200 dark:bg-jet-black z-40 rounded-t-lg"
 >
   <div class="flex flex-wrap w-full items-center justify-between h-16 px-4">
     <button
@@ -121,7 +79,7 @@ const items = ["Home", "About"];
     </button>
     <div class="hidden w-full lg:block lg:w-auto" id="navbar-default">
       <ul
-        class="font-medium flex flex-col items-center justify-center px-4 lg:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 lg:flex-row lg:space-x-8 rtl:space-x-reverse lg:mt-0 lg:border-0 lg:bg-white dark:bg-gray-800 lg:dark:bg-gray-900 dark:border-gray-700"
+        class="font-medium flex flex-col items-center justify-center px-4 lg:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 lg:flex-row lg:space-x-8 rtl:space-x-reverse lg:mt-0 lg:border-0 lg:bg-white dark:bg-jet-black  dark:border-gray-700"
       >
         {
           items.map((item: string) => (
@@ -137,9 +95,10 @@ const items = ["Home", "About"];
         }
 
         <li>
-            <DarkModeToggle client:only="solid-js">
-             
-            </DarkModeToggle>
+          <div class="py-2 px-3 select-none cursor-pointer" onclick="toggleDark()">
+            <svg class="dark:hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+            <svg class="hidden dark:block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun "><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg> 
+          </div>
         </li>
       </ul>
     </div>
