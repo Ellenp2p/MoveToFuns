@@ -1,8 +1,8 @@
 ---
 const items = ["Home", "About"];
 ---
-<script is:inline>
 
+<script is:inline>
   function toggleDark() {
     document.body.classList.toggle("dark");
   }
@@ -22,7 +22,6 @@ const items = ["Home", "About"];
     }
   }
 </script>
-
 
 <nav
   class="fixed top-0 w-full bg-white max-w-screen-2xl border-gray-200 dark:bg-jet-black z-40 rounded-t-lg"
@@ -79,7 +78,7 @@ const items = ["Home", "About"];
     </button>
     <div class="hidden w-full lg:block lg:w-auto" id="navbar-default">
       <ul
-        class="font-medium flex flex-col items-center justify-center px-4 lg:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 lg:flex-row lg:space-x-8 rtl:space-x-reverse lg:mt-0 lg:border-0 lg:bg-white dark:bg-jet-black  dark:border-gray-700"
+        class="font-medium flex flex-col items-center justify-center px-4 lg:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 lg:flex-row lg:space-x-8 rtl:space-x-reverse lg:mt-0 lg:border-0 lg:bg-white dark:bg-jet-black dark:border-gray-700"
       >
         {
           items.map((item: string) => (
@@ -95,9 +94,42 @@ const items = ["Home", "About"];
         }
 
         <li>
-          <div class="py-2 px-3 select-none cursor-pointer" onclick="toggleDark()">
-            <svg class="dark:hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-            <svg class="hidden dark:block" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun "><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg> 
+          <div
+            class="py-2 px-3 select-none cursor-pointer"
+            onclick="toggleDark()"
+          >
+            <svg
+              class="dark:hidden"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#000000"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-moon"
+              ><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg
+            >
+            <svg
+              class="hidden dark:block"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#ffffff"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              class="lucide lucide-sun"
+              ><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"
+              ></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"
+              ></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"
+              ></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"
+              ></path><path d="m19.07 4.93-1.41 1.41"></path></svg
+            >
           </div>
         </li>
       </ul>

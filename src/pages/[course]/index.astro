@@ -1,9 +1,8 @@
-
 ---
-
-export const getStaticPaths = () => Object.keys({
-    sui101: "sui101"
-}).map((course) => ({ params: { course }}));
+export const getStaticPaths = () =>
+  Object.keys({
+    sui101: "sui101",
+  }).map((course) => ({ params: { course } }));
 
 const { course } = Astro.params;
 ---
