@@ -127,6 +127,7 @@ export default {
               margin: '0 1px',
             },
             code: {
+              color: theme('colors.red.700'),
               fontWeight: 550,
               fontVariantLigatures: 'none',
             },
