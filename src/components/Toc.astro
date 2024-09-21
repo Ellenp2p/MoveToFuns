@@ -29,30 +29,36 @@ const { headings } = Astro.props;
       {
         headings.map(({ depth, slug, text }) => {
           let marginLeft;
+          let fontWeight;
           switch (depth) {
             case 1:
               marginLeft = "ml-0";
+              fontWeight = "font-bold";
               break;
             case 2:
               marginLeft = "ml-4";
+              fontWeight = "font-semibold";
               break;
             case 3:
               marginLeft = "ml-8";
+              fontWeight = "font-medium";
               break;
             case 4:
               marginLeft = "ml-12";
+              fontWeight = "font-normal";
               break;
             default:
               marginLeft = `ml-${(depth - 1) * 2}`;
-          }
-          return (
+              fontWeight = "font-light";
+              }
+              return (
             <div class={`${marginLeft} ${depth > 1 ? "pl-2" : ""}`}>
               <a
-          href={`#${slug}`}
-          onclick={`scrollToSection("${decodeURI(encodeURI(slug))}")`}
-          class="text-gray-600 hover:underline dark:text-gray-200"
+                href={`#${slug}`}
+                onclick={`scrollToSection("${decodeURI(encodeURI(slug))}")`}
+                class={`text-gray-600 hover:underline dark:text-gray-200 ${fontWeight}`}
               >
-          {text}
+                {text}
               </a>
             </div>
           );
