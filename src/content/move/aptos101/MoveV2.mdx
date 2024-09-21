@@ -125,3 +125,147 @@ enum VersionedData has key {
   V2{name: String, age: u64}
 }
 ```
+
+## Receiver Style Functions
+
+使用 `value.func(arg)` 调用函数
+
+```ts
+module 0x42::example {
+    struct S {}
+ 
+    fun foo(self: S, x: u64) { /* ... */ }
+ 
+    fun foo_borrow(self: &S, x: u64) { /* ... */ }
+
+    fun foo_borrow_mut(self: &mut S, x: u64) { /* ... */ }
+ 
+    fun example() {
+        let s = S {};
+        s.foo_borrow(1);
+        s.foo_borrow_mut(1);
+        s.foo(1);
+    }
+}
+```
+
+## Index Notation
+
+### Vector 
+使用 `vector` 时用 `[]` 读取变量
+| Indexing Syntax   | Vector Operation                           |
+|-------------------|--------------------------------------------|
+| `&v[i]`           | `vector::borrow(&v, i)`                    |
+| `&mut v[i]`       | `vector::borrow_mut(&mut v, i)`            |
+| `v[i]`            | `*vector::borrow(&v, i)`                   |
+| `v[i] = x`        | `*vector::borrow_mut(&mut v, i) = x`       |
+| `&v[i].field`     | `&vector::borrow(&v, i).field`             |
+| `&mut v[i].field` | `&mut vector::borrow_mut(&mut v, i).field` |
+| `v[i].field`      | `vector::borrow(&v, i).field`              |
+| `v[i].field = x`  | `vector::borrow_mut(&mut v, i).field = x`  |
+
+## Global
+
+使用 `[]` 替换 `borrow_global` and `borrow_global_mut`
+
+| Indexing Syntax         | Storage Operation                          |
+|-------------------------|--------------------------------------------|
+| `&T[address]`           | `borrow_global<T>(address)`                |
+| `&mut T[address]`       | `borrow_global_mut<T>(address)`            |
+| `T[address]`            | `*borrow_global<T>(address)`               |
+| `T[address] = x`        | `*borrow_global_mut<T>(address) = x`       |
+| `&T[address].field`     | `&borrow_global<T>(address).field`         |
+| `&mut T[address].field` | `&mut borrow_global_mut<T>(address).field` |
+| `T[address].field`      | `borrow_global<T>(address).field`          |
+| `T[address].field = x`  | `borrow_global_mut<T>(address).field = x`  |
+
+## Positional Structs
+
+### Tuple struct
+支持创建元组结构体
+```ts
+module 0x2::m {
+    struct Pair(u64, u8) has copy, drop;
+
+    fun work() {
+        let value = Pair(1, true);
+        assert!( value.0 == 1 && value.1 == true );
+        let Pair(number, boolean) = value;
+        assert!(number == 1 && boolean == true);
+    }
+}
+```
+
+### Pure Type Struct
+纯类型结构体
+```ts
+module 0x2::m {
+  struct TypeTag has copy, drop;
+}
+```
+
+### Rest field pattern
+
+支持解构剩余字段
+```ts
+module 0x2::m {
+  struct Foo{ x: u8, y: u16, z: u32 }
+  struct Bar(u8, u16, u32);
+  
+  fun foo_get_x(self: &Foo): u16 { 
+    let Foo{y, ..} = self;
+    x
+  }
+  
+  fun bar_get_0(self: &Foo): u8 { 
+    let Bar(x, ..) = self;
+    x
+  }
+  
+  fun bar_get_2(self: &Foo): u52 { 
+    // For positional structs, one can also put the 
+    // .. at the beginning.
+    let Bar(.., z) = self;
+    z
+  }
+}
+```
+
+## Package visibility
+
+支持代码包的可见的关键字，如下 `foo` 可以在当前 package 任意模块中调用
+```ts
+module 0x42::m {
+  package fun foo(): u64 { 0 }
+}
+ 
+module 0x42::other {
+  fun calls_m_foo(): u64 {
+    0x42::m::foo() // valid
+  }
+}
+```
+
+## Assert!
+
+新增  `assert!` 宏定义，支持自定义 `abort code` 和默认 `code = 0xCA26CBD9BE0B0000`
+```ts
+assert!(condition: bool, code: u64)
+assert!(condition: bool) // Since Move 2.0
+```
+
+## New Cast Syntax
+
+强制类型转换无需外加 `()` 
+```ts
+module 0x42::m {
+    fun foo(i: u128): u64 { 0 }
+
+    fun test(){
+        let a: u64 = 10;
+        
+        foo( ( a as u128 ) );   // Old
+        foo( a as u128 );       // Since Move 2.0
+    }
+}
+```
