@@ -6,17 +6,23 @@ import Toc from "@/components/Toc.astro";
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection("move");
-  return blogEntries.map((entry) => ({
+  return blogEntries.map((entry: { slug: any; }) => ({
     params: { slug: entry.slug },
     props: { entry },
   }));
 }
 
-const { entry } = Astro.props;
+interface Entry {
+  slug: string;
+  data: { [key: string]: any };
+  render: () => Promise<{ Content: any; headings: any }>;
+}
+
+const { entry } = Astro.props as { entry: Entry };
 const sub = entry.slug.match(/^(.+?)\//);
 const blogEntries = (await getCollection("move"))
-  .filter((item) => item.slug.startsWith(sub?.[0].toString() ?? ""))
-  .sort((a, b) => a.data["index"] - b.data["index"]);
+  .filter((item: { slug: string; }) => item.slug.startsWith(sub?.[0].toString() ?? ""))
+  .sort((a: { data: { [x: string]: number; }; }, b: { data: { [x: string]: number; }; }) => a.data["index"] - b.data["index"]);
 
 const { Content, headings } = await entry.render();
 ---
@@ -26,23 +32,28 @@ const { Content, headings } = await entry.render();
     entry.data["title"]
   }`}
 >
-  <div class="grow flex w-full h-full">
-    <Sidebar
-      entrys={blogEntries.map((item) => {
-        return { title: item.data["title"], slug: item.slug };
-      })}
-    />
-    <div class="flex flex-row w-full mt-16 lg:w-10/12">
-      <div
-        class="grow-[2] bg-white dark:bg-jet-black w-5/6 prose dark:prose-invert max-w-none pl-10 pr-4 py-12"
-      >
-        <Content />
+  <div class="flex flex-grow mx-auto h-full w-full">
+ 
+      <!-- Left Sidebar -->
+      <Sidebar
+        entrys={blogEntries.map((item: { data: { [x: string]: any; }; slug: any; }) => {
+          return { title: item.data["title"], slug: item.slug };
+        })}
+      />
+
+      <div id="123124r13rf" class="flex flex-row mt-16 flex-grow w-full">
+        <div
+          class="grow-[2] bg-white dark:bg-jet-black w-5/6 prose dark:prose-invert max-w-none pl-10 pr-4 py-12"
+        >
+          <Content />
+        </div>
+        <div
+          class="grow z-0 -mt-24 w-1/6 bg-white hidden lg:block dark:bg-jet-black"
+        >
+          <Toc headings={headings} />
+        </div>
       </div>
-      <div
-        class="grow z-0 -mt-24 w-1/6 bg-white hidden lg:block dark:bg-jet-black"
-      >
-        <Toc headings={headings} />
-      </div>
-    </div>
+ 
+
   </div>
 </BaseLayout>

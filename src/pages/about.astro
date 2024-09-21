@@ -1,27 +1,9 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
-import { Tabs } from "@/components/solid/Tabs";
 ---
 
 <BaseLayout title="About">
   <div class="grow mt-32">
-    <Tabs
-      client:only="solid-js"
-      tabs={[
-        {
-          name: "1",
-          content: "this is 1",
-        },
-        {
-          name: "2",
-          content: "this is 2",
-        },
-        {
-          name: "3",
-          content: "this is 33",
-        },
-      ]}
-    />
+    
   </div>
 </BaseLayout>
-@/components/solid/Tabs

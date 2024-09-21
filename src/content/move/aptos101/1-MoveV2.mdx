@@ -1,0 +1,127 @@
+---
+title: 'Aptos Move V2'
+pubDate: 2024-09-21
+author: 'Ellen | 不霁何虹'
+tags: []
+index: 2
+---
+
+# Aptos Move v2
+
+## 总览
+
+- Enum Types
+    - 枚举类型增加了在一个可存储类型中定义不同数据布局变体的选项
+- Receiver Style Functions
+    - 接收者风格函数增加了以熟悉的符号 `value.func(arg)` 调用函数的能力。它们在本节中有详细描述
+- Index Notation
+    - 索引符号（Index Notation）允许使用 `&mut vector[index]` 或 `&mut Resource[addr]` 等符号访问向量和资源存储的元素
+- Positional Structs
+    - 位置结构（Positional Structs）允许定义包装类型，例如 `struct Wrapped(u64)`。位置结构在此处有描述。枚举变体也允许是位置结构
+- Dot-dot pattern wildcards
+    - 点点模式通配符（Dot-dot pattern wildcards）使得像 `let Struct{x, ..} = value` 这样的语句可以匹配数据的选择性部分。它们在此处有描述。这些模式也适用于枚举变体
+- Package visibility
+    - 包可见性（Package visibility）允许声明一个函数在包内的任何地方可见，但在包外不可见。友元函数（Friend functions）仍然受支持，尽管包可见性在许多情况下更为合适。作为一种更简洁的符号，包和友元函数可以简单地声明为 `package fun` 或 `friend fun`，而不是较长的 `public(package) fun` 和 `public(friend) fun`。此功能在此处有文档说明。
+- Assert abort code optional
+    - `assert!` 宏现在可以只使用一个参数，即省略中止代码，在这种情况下，将选择默认代码。
+- New Cast Syntax
+    - 直到现在，类型转换必须始终在括号中，例如 `function((x as u256))`。这个要求现在被取消了，类型转换可以作为顶级表达式而不需要括号，例如 `function(x as u256)`。在表达式中仍然需要写 `(x as u64) + (y as u64)`。这同样适用于新的枚举变体测试，例如 `data is VersionedData::V1`
+
+## Enum Types
+
+可以通过 `enum` 关键字定义 `Enum Type `
+
+### Enum variants with fields
+Rust 中常见的 `Enum`:
+```ts
+enum Shape {
+    Circle{radius: u64},
+    Rectangle{width: u64, height: u64}
+}
+
+let data = Shape::Circle{radius: 10};
+```
+
+### Unit variants
+常见的 `Enum`:
+```ts
+enum Color {
+  Red, Blue, Green
+}
+
+let color = Color::Blue;
+```
+
+### Enum with abilities
+`Enum` 与 `Struct` 类似，也可以具有 abilities
+```ts
+enum Color has copy, drop, store, key { Red, Blue, Green }
+```
+
+带有 `Key` 的 `Enum` 可以 `move_to()`  `move_from()` `borrow_global` `borrow_global_mut`
+```ts
+enum VersionedData has key {
+  V1{name: String}
+  V2{name: String, age: u64}
+}
+```
+
+与 `Struct` 类似， `Enum` 也可以带有泛型
+```ts
+enum Result<T> has copy, drop, store {
+  Err(u64),
+  Ok(T)
+}
+```
+
+### match
+
+可以使用 `match` 匹配 `enum`
+
+不可变 `Enum`:
+```ts
+fun area(self: &Rectangle): u64 {
+    match (self) {
+        Circle{ radius }           => mul_with_pi(*radius * *radius),
+        Rectangle{ width, height } => *width * *height
+    }
+}
+```
+可变 `Enum`:
+```ts
+fun scale_radius(self: &mut Rectangle, factor:  u64) {
+    match (self) {
+        Circle{ radius: r } => *r = *r * factor,
+        _                 => {} // do nothing if not a Circle
+  }
+}
+```
+
+### is
+
+可以使用 `is` 检查是否是某个值
+```ts
+let data: VersionedData;
+if (data is VersionedData::V1) { .. }
+```
+
+可以用 `|` 同时检查多个值
+```ts
+assert!(data is V1 | V2);
+```
+
+### Enum 合约升级增加字段
+
+Enum 可以增加字段，但不能减少字段和修改顺序
+```ts
+enum VersionedData has key {
+  V1{name: String}
+}
+ 
+to
+
+enum VersionedData has key {
+  V1{name: String}
+  V2{name: String, age: u64}
+}
+```
