@@ -8,20 +8,18 @@ const { headings } = Astro.props;
 ---
 
 <script>
-  const tableOfContents = document.getElementById('tableOfContents');
-  const headings = document.querySelectorAll('.prose h1[id], .prose h2[id], .prose h3[id], .prose h4[id]');
-  const tocLinks = tableOfContents ? tableOfContents.querySelectorAll('a') : [];
+  let tableOfContents: HTMLElement | null = null; 
+   
+  let headings: any[] | NodeListOf<Element> | null = null;
+  let tocLinks: any[] | NodeListOf<HTMLAnchorElement> = [] ;
+
   function highlightActiveSection() {
     let currentActiveIndex = 0;
-
-    headings.forEach((heading, index) => {
+    if( !headings || !tocLinks || !tableOfContents) return;
+    headings?.forEach((heading: { getBoundingClientRect: () => any; }, index: number) => {
       const rect = heading.getBoundingClientRect();
       const headerHeight = 6 * parseFloat(getComputedStyle(document.documentElement).fontSize); 
-      const viewportHeight = window.innerHeight;
-      const middleOfViewport = viewportHeight / 2;
 
-      const headingTop = rect.top - headerHeight;
-      const headingBottom = rect.bottom - headerHeight;
       if(rect.top <= 20 + headerHeight && rect.top > headerHeight) {
         currentActiveIndex = index;
       }else if( rect.top <= headerHeight ) {
@@ -45,6 +43,12 @@ const { headings } = Astro.props;
   }
   highlightActiveSection();
   window.addEventListener('scroll', highlightActiveSection);
+  document.addEventListener("astro:page-load", () => {
+    tableOfContents = document.getElementById('tableOfContents');
+    headings = document.querySelectorAll('.prose h1[id], .prose h2[id], .prose h3[id], .prose h4[id]');
+    tocLinks = tableOfContents ? tableOfContents.querySelectorAll('a') : [];
+    highlightActiveSection();
+  });
 </script>
 <script is:inline>
   function scrollToSection(sectionId) {
