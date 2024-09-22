@@ -80,7 +80,7 @@ enum Result<T> has copy, drop, store {
 
 不可变 `Enum`:
 ```ts
-fun area(self: &Rectangle): u64 {
+fun area(self: &Shape): u64 {
     match (self) {
         Circle{ radius }           => mul_with_pi(*radius * *radius),
         Rectangle{ width, height } => *width * *height
@@ -89,7 +89,7 @@ fun area(self: &Rectangle): u64 {
 ```
 可变 `Enum`:
 ```ts
-fun scale_radius(self: &mut Rectangle, factor:  u64) {
+fun scale_radius(self: &mut Shape, factor:  u64) {
     match (self) {
         Circle{ radius: r } => *r = *r * factor,
         _                 => {} // do nothing if not a Circle
@@ -132,7 +132,7 @@ enum VersionedData has key {
 
 ```ts
 module 0x42::example {
-    struct S {}
+    struct S has drop {}
  
     fun foo(self: S, x: u64) { /* ... */ }
  
@@ -142,8 +142,8 @@ module 0x42::example {
  
     fun example() {
         let s = S {};
-        s.foo_borrow(1);
         s.foo_borrow_mut(1);
+        s.foo_borrow(1);
         s.foo(1);
     }
 }
@@ -161,7 +161,7 @@ module 0x42::example {
 | `v[i] = x`        | `*vector::borrow_mut(&mut v, i) = x`       |
 | `&v[i].field`     | `&vector::borrow(&v, i).field`             |
 | `&mut v[i].field` | `&mut vector::borrow_mut(&mut v, i).field` |
-| `v[i].field`      | `vector::borrow(&v, i).field`              |
+| `v[i].field`      | `vector::borrow(&v, i).field  `              |
 | `v[i].field = x`  | `vector::borrow_mut(&mut v, i).field = x`  |
 
 ## Global
@@ -185,7 +185,7 @@ module 0x42::example {
 支持创建元组结构体
 ```ts
 module 0x2::m {
-    struct Pair(u64, u8) has copy, drop;
+    struct Pair(u64, bool) has copy, drop;
 
     fun work() {
         let value = Pair(1, true);
@@ -209,25 +209,25 @@ module 0x2::m {
 支持解构剩余字段
 ```ts
 module 0x2::m {
-  struct Foo{ x: u8, y: u16, z: u32 }
-  struct Bar(u8, u16, u32);
+    struct Foo{ x: u8, y: u16, z: u32 }
+    struct Bar(u8, u16, u32);
   
-  fun foo_get_x(self: &Foo): u16 { 
-    let Foo{y, ..} = self;
-    x
-  }
-  
-  fun bar_get_0(self: &Foo): u8 { 
-    let Bar(x, ..) = self;
-    x
-  }
-  
-  fun bar_get_2(self: &Foo): u52 { 
-    // For positional structs, one can also put the 
-    // .. at the beginning.
-    let Bar(.., z) = self;
-    z
-  }
+    fun foo_get_y(self: &Foo): &u16 {
+        let Foo{y, ..} = self;
+        y
+    }
+
+    fun bar_get_0(self: &Bar): &u8 {
+        let Bar(x, ..) = self;
+        x
+    }
+
+    fun bar_get_2(self: &Bar): &u32 {
+        // For positional structs, one can also put the
+        // .. at the beginning.
+        let Bar(.., z) = self;
+        z
+    }
 }
 ```
 
@@ -250,8 +250,8 @@ module 0x42::other {
 
 新增  `assert!` 宏定义，支持自定义 `abort code` 和默认 `code = 0xCA26CBD9BE0B0000`
 ```ts
-assert!(condition: bool, code: u64)
-assert!(condition: bool) // Since Move 2.0
+assert!(condition: bool, code: u64);
+assert!(condition: bool); // Since Move 2.0
 ```
 
 ## New Cast Syntax
