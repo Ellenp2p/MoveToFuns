@@ -7,6 +7,45 @@ type Props = {
 const { headings } = Astro.props;
 ---
 
+<script>
+  const tableOfContents = document.getElementById('tableOfContents');
+  const headings = document.querySelectorAll('.prose h1[id], .prose h2[id], .prose h3[id], .prose h4[id]');
+  const tocLinks = tableOfContents ? tableOfContents.querySelectorAll('a') : [];
+  function highlightActiveSection() {
+    let currentActiveIndex = 0;
+
+    headings.forEach((heading, index) => {
+      const rect = heading.getBoundingClientRect();
+      const headerHeight = 6 * parseFloat(getComputedStyle(document.documentElement).fontSize); 
+      const viewportHeight = window.innerHeight;
+      const middleOfViewport = viewportHeight / 2;
+
+      const headingTop = rect.top - headerHeight;
+      const headingBottom = rect.bottom - headerHeight;
+      if(rect.top <= 20 + headerHeight && rect.top > headerHeight) {
+        currentActiveIndex = index;
+      }else if( rect.top <= headerHeight ) {
+        if (rect.bottom > headerHeight){
+          currentActiveIndex = index;
+        }else{
+          currentActiveIndex = index;
+        }
+      };
+    });
+
+    tocLinks.forEach((link, index) => {
+      if (index === currentActiveIndex) {
+        link.classList.add('text-blue-600', 'dark:text-blue-500');
+        link.classList.remove('text-gray-600', 'dark:text-gray-400');
+      } else {
+        link.classList.remove('text-blue-600', 'dark:text-blue-500');
+        link.classList.add('text-gray-600', 'dark:text-gray-400');
+      }
+    });
+  }
+  highlightActiveSection();
+  window.addEventListener('scroll', highlightActiveSection);
+</script>
 <script is:inline>
   function scrollToSection(sectionId) {
     let yOffset = -100;
@@ -25,6 +64,7 @@ const { headings } = Astro.props;
   <div class="sticky top-0 pt-28 h-fit w-full">
     <div
       class="flex flex-col px-4 gap-2 w-full border-solid border-l-2 text-sm"
+      id="tableOfContents"
     >
       {
         headings.map(({ depth, slug, text }) => {
@@ -52,15 +92,13 @@ const { headings } = Astro.props;
               fontWeight = "font-light";
               }
               return (
-            <div class={`${marginLeft} ${depth > 1 ? "pl-2" : ""}`}>
               <a
                 href={`#${slug}`}
                 onclick={`scrollToSection("${decodeURI(encodeURI(slug))}")`}
-                class={`text-gray-600 hover:underline dark:text-gray-200 ${fontWeight}`}
+                class={`text-gray-600 hover:underline dark:text-gray-200 ${fontWeight} `+` ${marginLeft} ${depth > 1 ? "pl-2" : ""}`}
               >
                 {text}
-              </a>
-            </div>
+            </a>
           );
         })
       }
