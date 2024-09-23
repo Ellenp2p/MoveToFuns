@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import Sidebar from "@/components/Sidebar.astro";
 import Toc from "@/components/Toc.astro";
+import ArticleInfo from "@/components/ArticleInfo.astro";
 
 export async function getStaticPaths() {
   const blogEntries = await getCollection("move");
@@ -40,11 +41,15 @@ const { Content, headings } = await entry.render();
           return { title: item.data["title"], slug: item.slug };
         })}
       />
+      
 
       <div id="123124r13rf" class="flex flex-row mt-16 flex-grow w-full">
         <div
           class="grow-[2] bg-white dark:bg-jet-black w-5/6 prose dark:prose-dark max-w-none  px-4 lg:pl-10  pr-4 py-12"
         >
+          <h1 class="text-4xl font-bold">{entry.data["title"]}</h1>
+          <ArticleInfo publishDate={entry.data["pubDate"]} author={entry.data["author"]}/>
+          <div class="mt-6"></div>
           <Content />
         </div>
         <div

@@ -6,9 +6,7 @@ tags: []
 index: 2
 ---
 
-# Aptos Move v2
-
-## 总览
+# 总览
 
 - Enum Types
     - 枚举类型增加了在一个可存储类型中定义不同数据布局变体的选项
@@ -27,11 +25,11 @@ index: 2
 - New Cast Syntax
     - 直到现在，类型转换必须始终在括号中，例如 `function((x as u256))`。这个要求现在被取消了，类型转换可以作为顶级表达式而不需要括号，例如 `function(x as u256)`。在表达式中仍然需要写 `(x as u64) + (y as u64)`。这同样适用于新的枚举变体测试，例如 `data is VersionedData::V1`
 
-## Enum Types
+# Enum Types
 
 可以通过 `enum` 关键字定义 `Enum Type `
 
-### Enum variants with fields
+## Enum variants with fields
 Rust 中常见的 `Enum`:
 ```ts
 enum Shape {
@@ -42,7 +40,7 @@ enum Shape {
 let data = Shape::Circle{radius: 10};
 ```
 
-### Unit variants
+## Unit variants
 常见的 `Enum`:
 ```ts
 enum Color {
@@ -52,7 +50,7 @@ enum Color {
 let color = Color::Blue;
 ```
 
-### Enum with abilities
+## Enum with abilities
 `Enum` 与 `Struct` 类似，也可以具有 abilities
 ```ts
 enum Color has copy, drop, store, key { Red, Blue, Green }
@@ -74,7 +72,7 @@ enum Result<T> has copy, drop, store {
 }
 ```
 
-### Match
+## Match
 
 可以使用 `match` 匹配 `enum`
 
@@ -97,7 +95,7 @@ fun scale_radius(self: &mut Shape, factor:  u64) {
 }
 ```
 
-### Is
+## Is
 
 可以使用 `is` 检查是否是某个值
 ```ts
@@ -110,7 +108,7 @@ if (data is VersionedData::V1) { .. }
 assert!(data is V1 | V2);
 ```
 
-### Enum 合约升级增加字段
+## Enum 合约升级增加字段
 
 Enum 可以增加字段，但不能减少字段和修改顺序
 ```ts
@@ -126,7 +124,7 @@ enum VersionedData has key {
 }
 ```
 
-## Receiver Style Functions
+# Receiver Style Functions
 
 使用 `value.func(arg)` 调用函数
 
@@ -149,9 +147,9 @@ module 0x42::example {
 }
 ```
 
-## Index Notation
+# Index Notation
 
-### Vector 
+## Vector 
 使用 `vector` 时用 `[]` 读取变量
 | Indexing Syntax   | Vector Operation                           |
 |-------------------|--------------------------------------------|
@@ -164,7 +162,7 @@ module 0x42::example {
 | `v[i].field`      | `vector::borrow(&v, i).field  `              |
 | `v[i].field = x`  | `vector::borrow_mut(&mut v, i).field = x`  |
 
-## Global
+# Global
 
 使用 `[]` 替换 `borrow_global` and `borrow_global_mut`
 
@@ -179,9 +177,9 @@ module 0x42::example {
 | `T[address].field`      | `borrow_global<T>(address).field`          |
 | `T[address].field = x`  | `borrow_global_mut<T>(address).field = x`  |
 
-## Positional Structs
+# Positional Structs
 
-### Tuple struct
+## Tuple struct
 支持创建元组结构体
 ```ts
 module 0x2::m {
@@ -196,7 +194,7 @@ module 0x2::m {
 }
 ```
 
-### Pure Type Struct
+## Pure Type Struct
 纯类型结构体
 ```ts
 module 0x2::m {
@@ -204,7 +202,7 @@ module 0x2::m {
 }
 ```
 
-### Rest field pattern
+## Rest field pattern
 
 支持解构剩余字段
 ```ts
@@ -231,7 +229,7 @@ module 0x2::m {
 }
 ```
 
-## Package visibility
+# Package visibility
 
 支持代码包的可见的关键字，如下 `foo` 可以在当前 package 任意模块中调用
 ```ts
@@ -246,7 +244,7 @@ module 0x42::other {
 }
 ```
 
-## Assert!
+# Assert!
 
 新增  `assert!` 宏定义，支持自定义 `abort code` 和默认 `code = 0xCA26CBD9BE0B0000`
 ```ts
@@ -254,7 +252,7 @@ assert!(condition: bool, code: u64);
 assert!(condition: bool); // Since Move 2.0
 ```
 
-## New Cast Syntax
+# New Cast Syntax
 
 强制类型转换无需外加 `()` 
 ```ts
