@@ -32,4 +32,9 @@ const { title, description = "" } = Astro.props;
 <meta property="twitter:title" content={title} />
 <meta property="twitter:description" content={description} />
 
+<!-- TG -->
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+
 <ViewTransitions />
