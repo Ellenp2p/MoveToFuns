@@ -1,0 +1,57 @@
+---
+import { getCollection, type CollectionEntry ,render } from "astro:content";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import Sidebar from "@/components/Sidebar.astro";
+import Toc from "@/components/Toc.astro";
+import ArticleInfo from "@/components/ArticleInfo.astro";
+
+export async function getStaticPaths() {
+  const moveEntries = await getCollection("move");
+  return moveEntries.map((post)=>({
+      params: { id: post.id },
+      props: { post }
+  }))
+}
+
+const { post } = Astro.props;
+const sub = post.id.match(/^(.+?)\//);
+const blogEntries = (await getCollection("move"))
+  .filter((item: CollectionEntry<"move">) => item.id.startsWith(sub?.[0].toString() ?? ""))
+  .sort((a: CollectionEntry<"move">, b: CollectionEntry<"move">) => a.data["index"] - b.data["index"]);
+
+const { Content, headings } = await render(post);
+---
+ 
+
+<BaseLayout
+  title={`Move Startrek | ${sub?.[0].replace("/", "").toUpperCase()} - ${
+    post.data["title"]
+  }`}
+>
+  <div class="flex flex-grow mx-auto h-full w-full">
+ 
+      <Sidebar
+        entrys={blogEntries.map((item: CollectionEntry<"move">) => {
+          return { title: item.data["title"], slug: item.id };
+        })}
+      />
+      
+      <div id="123124r13rf" class="flex flex-row mt-16 flex-grow w-full">
+        <div
+          class="grow-[2] bg-white dark:bg-jet-black w-5/6 prose dark:prose-dark max-w-none  px-4 lg:pl-10  pr-4 py-12"
+        >
+          <h1 class="text-4xl font-bold">{post.data["title"]}</h1>
+          <ArticleInfo publishDate={post.data["pubDate"]} author={post.data["author"]}/>
+          <div class="mt-6"></div>
+          <Content />
+        </div>
+        <div
+          class="grow z-0 -mt-24 w-1/6 bg-white hidden lg:block dark:bg-jet-black"
+        >
+          <Toc headings={headings} />
+        </div>
+      </div>
+ 
+
+  </div>
+</BaseLayout>
